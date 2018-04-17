@@ -15,6 +15,3 @@ train_df <- train_df[,-15:-20]
 train_df <- train_df[,-27:-33]
 
 write.csv(train_df, file = "train_processed.csv")
-
-# check for missing values 
-describe(train_df)

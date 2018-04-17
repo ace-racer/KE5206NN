@@ -2,6 +2,7 @@
 title: "Data Exploration"
 output: html_document
 ---
+# Data Exploration on Online News Popularity 
 
 ```{r setup, include=FALSE}
 rm(list=ls())
@@ -9,11 +10,7 @@ setwd('C:/Users/pierl/OneDrive/Documents/R_Projects/KE5206NN')
 
 ```
 
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+## Read processed file from data_transform.R.
 
 ```{r data}
 train_df <- read.csv('train_processed.csv')
@@ -25,12 +22,14 @@ head(train_df)
 
 ```
 
-Check for missing values 
+## Check for missing values
+
 ```{r}
 describe(train_df)
 ```
 
-Correlation Analysis
+## Correlation Analysis
+
 ```{r plot, echo=FALSE}
 
 library(corrplot, quietly=TRUE)
@@ -72,7 +71,9 @@ print(correlations)
 corrplot(correlations, mar=c(0,0,1,0))
 title(main="Correlation train_processed.csv using Pearson",
     sub=paste("Rattle", format(Sys.time(), "%Y-%b-%d %H:%M:%S"), Sys.info()["user"]))
+print(ncol(train_df))
 ```
+
 
 The following features are very highly correlated: 
 - n_non_stop_words
@@ -95,6 +96,13 @@ avg_negative_polarity and min_negative_polarity have high correlation. **Propose
 
 global_rate_negative_words and rate_negative_words have high correlation. **Propose to remove rate_negative_words**
 
+## Remove Unwanted Fields
 
+```{r}
+train_df <- train_df[ , -which(names(train_df) %in% c("n_non_stop_words","n_unique_tokens.", "kw_max_min.", "self_reference_max_shares", "self_reference_min_shares",
+                                          "kw_max_avg", "max_positive_polarity", "rate_positive_words", "min_negative_polarity", "rate_negative_words"))]
+print(ncol(train_df))
+```
 
+Explore PCA? 
 
