@@ -1,6 +1,6 @@
 
 rm(list=ls())
-setwd('C:/Users/pierl/OneDrive/Documents/R_Projects/KE5206_Computational_Intelligence')
+setwd('C:/Users/pierl/OneDrive/Documents/R_Projects/KE5206NN')
 train_df <- read.csv('./data/train_70.0.csv')
 
 # combine data_channel_is_? and weekday_is_? fields
@@ -15,3 +15,6 @@ train_df <- train_df[,-15:-20]
 train_df <- train_df[,-27:-33]
 
 write.csv(train_df, file = "train_processed.csv")
+
+# check for missing values 
+describe(train_df)
