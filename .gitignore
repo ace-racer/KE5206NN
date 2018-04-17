@@ -1,2 +1,3 @@
 regression/data/
 *.pyc
+*.ipynb
