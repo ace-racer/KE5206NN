@@ -96,12 +96,15 @@ avg_negative_polarity and min_negative_polarity have high correlation. **Propose
 
 global_rate_negative_words and rate_negative_words have high correlation. **Propose to remove rate_negative_words**
 
+I think we can also remove **url** as it doesn't add any value to modeling. 
+
 ## Remove Unwanted Fields
 
 ```{r}
 train_df <- train_df[ , -which(names(train_df) %in% c("n_non_stop_words","n_unique_tokens.", "kw_max_min.", "self_reference_max_shares", "self_reference_min_shares",
-                                          "kw_max_avg", "max_positive_polarity", "rate_positive_words", "min_negative_polarity", "rate_negative_words"))]
+                                          "kw_max_avg", "max_positive_polarity", "rate_positive_words", "min_negative_polarity", "rate_negative_words", "url"))]
 print(ncol(train_df))
+write.csv(train_df, file = "fields_removed.csv")
 ```
 
 Explore PCA? 
