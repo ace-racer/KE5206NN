@@ -1,7 +1,7 @@
 library(nnet)
 library(Metrics)
 
-setwd('/Users/pierlim/R_Projects/KE5206NN')
+setwd('C:/Users/pierl/OneDrive/Documents/R_Projects/KE5206NN')
 train_df <- read.csv('fields_removed.csv')
 test_df <- read.csv('test_fields_removed.csv')
 
