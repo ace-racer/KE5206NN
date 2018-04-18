@@ -56,7 +56,9 @@ nn_df <- train_scaled_df
 nn_test_df <- test_scaled_df
 set.seed(42)
 cat("\nCreating and training a RBF network . . \n")
-rbf_model <- rbf(nn_df, nn_df$shares, size=8, linOut=TRUE)
+rbf_model <- rbf(nn_df, nn_df$shares, size=8, linOut=TRUE,
+                 initFunc = "RBF_Weights", initFuncParams = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
+                 learnFunc = "RadialBasisLearning", learnFuncParams = c(1e-05, 1e-05, 1e-05, 1e-05, 1e-05, 1e-05, 1e-05,1e-05))
 rbf_predict <- predict(rbf_model, nn_test_df)
 
 pred_shares <- get_num_shares(rbf_predict, min_share_val, max_share_val)
