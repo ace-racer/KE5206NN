@@ -1,9 +1,9 @@
-
 library(nnet)
 library(Metrics)
 
 setwd('/Users/pierlim/R_Projects/KE5206NN')
 train_df <- read.csv('fields_removed.csv')
+test_df <- read.csv('test_fields_removed.csv')
 
 # min max normalisation
 max_share_val <- max(train_df$shares)
@@ -12,40 +12,75 @@ maxs = apply(train_df, 2, max)
 mins = apply(train_df, 2 ,min)
 shares = as.numeric(train_df$shares)
 train_scaled_df <- as.data.frame(scale(train_df, center = mins, scale = maxs - mins))
+# scale test data using train data's params
+test_scaled_df <- as.data.frame(scale(test_df, center = mins, scale = maxs - mins)) 
 
-# Neural Nets + BP
+# fn to convert from normalized to actual share value
+get_num_shares <- function(share_norm, min_share_val, max_share_val) {
+  return (share_norm * (max_share_val - min_share_val) + min_share_val)
+}
+
+
+#### ---------------------------------- FFNN + BP ------------------------------------ ####
+# h2o's early stopping parameters default to 
+# stopping_rounds = 5
+# stopping_metric = deviance
+# stopping_tolerance = 0.001
+library(h2o)
+
 nn_df <- train_scaled_df
+nn_test_df <- test_scaled_df
+h20_df <- nn_df[ , -which(names(nn_df) %in% c("shares"))]
+dl_fit1 <- h2o.deeplearning(x = names(h20_df),
+                            y = "shares",
+                            training_frame = as.h2o(nn_df),
+                            model_id = "dl_fit1",
+                            hidden = c(100, 100, 10),
+                            nfolds = 3,
+                            seed = 1, epochs = 10000) 
 
-set.seed(42)
-cat("\nCreating and training a neural network . . \n")
-mynn <- nnet(shares ~ ., data=nn_df, linout=TRUE,
-             size=30,skip=TRUE, MaxNWts=10000, trace=FALSE, maxit=100)
-pred <- predict(mynn)
-cm <- as.data.frame(cbind(nn_df$shares, pred))
+h2o_predict <- as.data.frame(h2o.predict(dl_fit1, as.h2o(nn_test_df)))
+pred_shares <- get_num_shares(h2o_predict, min_share_val, max_share_val)
+actual_shares <- get_num_shares(nn_test_df$shares, min_share_val, max_share_val)
+print("RMSE for neural network is :")
+print(rmse(nn_test_df$shares, h2o_predict))
+print("Training RMSE:")
+print(h2o.rmse(dl_fit1))
+plot(dl_fit1, timestep = "epochs", metric = "rmse")
 
-pred_shares <-  pred * (max_share_val - min_share_val) + min_share_val
-actual_shares <- (nn_df$shares * (max_share_val - min_share_val)) + min_share_val
-rmse_result <- rmse(actual_shares, pred_shares)
-print("Neural Network RMSE:")
-print(rmse_result)
-plot(shares, pred, col='blue', pch=16, ylab="predicted shares", xlab="real shares")
 
-# RBF Model
+#### ---------------------------------- RBF ------------------------------------ ####
+# RBF Model : observation -> when size is increased, the predicted values become more and more similar
 library(RSNNS)
 nn_df <- train_scaled_df
+nn_test_df <- test_scaled_df
 set.seed(42)
 cat("\nCreating and training a RBF network . . \n")
-rbf_model <- rbf(nn_df, nn_df$shares, size=5, linOut=TRUE)
-rbf_predict <- fitted(rbf_model)
+rbf_model <- rbf(nn_df, nn_df$shares, size=8, linOut=TRUE)
+rbf_predict <- predict(rbf_model, nn_test_df)
 
-pred_shares <-  rbf_predict * (max_share_val - min_share_val) + min_share_val
-actual_shares <- (nn_df$shares * (max_share_val - min_share_val)) + min_share_val
-rmse_result <- rmse(actual_shares, pred_shares) 
+pred_shares <- get_num_shares(rbf_predict, min_share_val, max_share_val)
+actual_shares <- get_num_shares(nn_test_df$shares, min_share_val, max_share_val)
+rmse_result <- rmse(nn_test_df$shares, rbf_predict) 
 print("RBF Model RMSE:")
 print(rmse_result)
-# observation -> when size is increased, the predicted values become more and more similar
 
-# GRNN Model
+# Home made grid search for max_size
+max_size <- 50
+best_rmse <- 999.0
+best_rbf_model <- NA
+for (i in 2:max_size) {   # putting size=1 will crash rbf
+  rbf_model <- rbf(nn_df, nn_df$shares, size=i, linOut=TRUE)
+  rbf_predict <- predict(rbf_model, nn_test_df)
+  rmse_result <- rmse(nn_test_df$shares, rbf_predict)
+  if (rmse_result < best_rmse) {
+    best_rmse <- rmse_result
+    best_rbf_model <- rbf_model
+    cat("best size param = ", i, "\n")
+  }
+}
+
+#### ---------------------------------- GRNN ------------------------------------ ####
 pred_grnn <- function(x, nn){
   xlst <- split(x, 1:nrow(x))
   pred <- foreach(i = xlst, .combine = rbind) %dopar% {
@@ -57,43 +92,15 @@ library(grnn)
 library(doSNOW)
 library(doParallel)
 nn_df <- train_scaled_df
+nn_test_df <- test_scaled_df
 grnn <- smooth(learn(nn_df, variable.column = ncol(nn_df)), sigma=0.2)
-pred <- pred_grnn(nn_df, grnn) # pick 10 rows
+pred <- pred_grnn(nn_test_df, grnn) # runs forever
 
 pred_shares <-  pred * (max_share_val - min_share_val) + min_share_val
 actual_shares <- (nn_df$shares * (max_share_val - min_share_val)) + min_share_val
-rmse_result <- rmse(actual_shares, pred_shares) 
+rmse_result <- rmse(nn_df$shares, pred) 
 print("GRNN Model RMSE:")
 print(rmse_result)
 
-# SEARCH FOR THE OPTIMAL VALUE OF SIGMA BY THE VALIDATION SAMPLE
-# cv <- foreach(s = seq(0.2, 1, 0.05), .combine = rbind) %dopar% {
-#   grnn <- smooth(learn(train_df, variable.column = ncol(train_df)), sigma = s)
-#   pred <- pred_grnn(set2[, -ncol(set2)], grnn)
-#   test.sse <- sum((set2[, ncol(set2)] - pred$pred)^2)
-#   data.frame(s, sse = test.sse)
-# }
+# PNN was not tried because it is used for classification problems
 
-
-
-
-# library(neuralnet)
-# features<-names(train_df)
-# f <- paste(features,collapse = ' + ')
-# f <- paste('shares ~', f)
-# f <- as.formula(f)
-# n <- names(train_df)
-# nn <- neuralnet(f, train_df, hidden=c(10,10), linear.output=T)
-# predicted <- compute(nn, train_df[1:ncol(train_df)])
-# rmse_result <- rmse(train_df$shares, predicted)
-# 
-# # min max normalisation
-# maxs = apply(train_df, 2, max)
-# mins = apply(train_df, 2 ,min)
-# shares = as.numeric(train_df$shares)
-# trainNN <- as.data.frame(scale(train_df, center = mins, scale = maxs - mins))
-# features<-names(trainNN[,1:ncol(trainNN)])
-# f <- paste(features,collapse = ' + ')
-# f <- paste('shares ~', f)
-# f <- as.formula(f)
-# nn <- neuralnet(f, trainNN, hidden=c(10,10), linear.output=T)
