@@ -21,6 +21,7 @@ get_num_shares <- function(share_norm, min_share_val, max_share_val) {
 }
 
 
+
 #### ---------------------------------- FFNN + BP ------------------------------------ ####
 # h2o's early stopping parameters default to 
 # stopping_rounds = 5
@@ -35,9 +36,9 @@ dl_fit1 <- h2o.deeplearning(x = names(h20_df),
                             y = "shares",
                             training_frame = as.h2o(nn_df),
                             model_id = "dl_fit1",
-                            hidden = c(100, 100, 10),
+                            hidden = c(100, 100, 50),
                             nfolds = 3,
-                            seed = 1, epochs = 10000) 
+                            seed = 1, epochs = 10000, l1=1e-5, l2=1e-5, activation = "Maxout") 
 
 h2o_predict <- as.data.frame(h2o.predict(dl_fit1, as.h2o(nn_test_df)))
 pred_shares <- get_num_shares(h2o_predict, min_share_val, max_share_val)
@@ -48,6 +49,31 @@ print("Training RMSE:")
 print(h2o.rmse(dl_fit1))
 plot(dl_fit1, timestep = "epochs", metric = "rmse")
 
+h2o.init()
+# random search
+activation_opt <- c("Rectifier", "Maxout", "Tanh", "RectifierWithDropout", "TanhWithDropout", "MaxoutWithDropout")
+l1_opt <- c(0, 0.00001, 0.0001, 0.001, 0.01)
+l2_opt <- c(0, 0.00001, 0.0001, 0.001, 0.01)
+
+hyper_params <- list(activation = activation_opt, l1 = l1_opt, l2 = l2_opt)
+#search_criteria <- list(strategy = "RandomDiscrete", max_runtime_secs = 600)
+search_criteria <- list(strategy = "Cartesian")
+
+splits <- h2o.splitFrame(as.h2o(nn_df), ratios = 0.8, seed = 1)
+dl_grid <- h2o.grid("deeplearning", x = names(h20_df),
+                    y = "shares",
+                    grid_id = "dl_grid2",
+                    training_frame = splits[[1]],
+                    validation_frame = splits[[2]],
+                    seed = 1,
+                    hidden = c(100,100,50),
+                    hyper_params = hyper_params,
+                    search_criteria = search_criteria)
+
+dl_gridperf <- h2o.getGrid(grid_id = "dl_grid2", 
+                           sort_by = "rmse", 
+                           decreasing = FALSE)
+print(dl_gridperf)
 
 #### ---------------------------------- RBF ------------------------------------ ####
 # RBF Model : observation -> when size is increased, the predicted values become more and more similar
@@ -94,7 +120,7 @@ library(doParallel)
 nn_df <- train_scaled_df
 nn_test_df <- test_scaled_df
 grnn <- smooth(learn(nn_df, variable.column = ncol(nn_df)), sigma=0.2)
-pred <- pred_grnn(nn_test_df, grnn) # runs forever
+pred <- pred_grnn(nn_test_df[1:100,], grnn) # runs forever
 
 pred_shares <-  pred * (max_share_val - min_share_val) + min_share_val
 actual_shares <- (nn_df$shares * (max_share_val - min_share_val)) + min_share_val
