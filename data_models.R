@@ -51,7 +51,7 @@ plot(dl_fit1, timestep = "epochs", metric = "rmse")
 
 h2o.init()
 # random search
-activation_opt <- c("Rectifier", "Maxout", "Tanh", "RectifierWithDropout", "TanhWithDropout", "MaxoutWithDropout")
+activation_opt <- c("Rectifier", "Maxout", "Tanh")
 l1_opt <- c(0, 0.00001, 0.0001, 0.001, 0.01)
 l2_opt <- c(0, 0.00001, 0.0001, 0.001, 0.01)
 
@@ -109,6 +109,8 @@ for (i in 2:max_size) {   # putting size=1 will crash rbf
 }
 
 #### ---------------------------------- GRNN ------------------------------------ ####
+# omg, it runs forever! 
+
 pred_grnn <- function(x, nn){
   xlst <- split(x, 1:nrow(x))
   pred <- foreach(i = xlst, .combine = rbind) %dopar% {
@@ -122,7 +124,7 @@ library(doParallel)
 nn_df <- train_scaled_df
 nn_test_df <- test_scaled_df
 grnn <- smooth(learn(nn_df, variable.column = ncol(nn_df)), sigma=0.2)
-pred <- pred_grnn(nn_test_df[1:100,], grnn) # runs forever
+pred <- pred_grnn(nn_test_df[1:100,], grnn) # cut out 100, else it will run forever
 
 pred_shares <-  pred * (max_share_val - min_share_val) + min_share_val
 actual_shares <- (nn_df$shares * (max_share_val - min_share_val)) + min_share_val
