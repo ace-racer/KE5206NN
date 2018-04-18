@@ -33,17 +33,19 @@ nb_units = 50
 
 model = Sequential()
 
+# TODO explore GRU
+# TODO try multiple layers
+
 # Recurrent layers supported: SimpleRNN, LSTM, GRU:
 # using img_row as time_steps, img_cols as inputs
-model.add(SimpleRNN(nb_units,
-                    input_shape=(img_rows, img_cols)))
+# model.add(SimpleRNN(nb_units,
+#                     input_shape=(img_rows, img_cols)))
+# model.add(LSTM(nb_units,
+#                input_shape=(img_rows, img_cols))) # acc 88.5
 
-# To stack multiple RNN layers, all RNN layers except the last one need
-# to have "return_sequences=True".  An example of using two RNN layers:
-# model.add(SimpleRNN(16,
-#                    input_shape=(img_rows, img_cols),
-#                    return_sequences=True))
-# model.add(SimpleRNN(32))
+# Stack multiple RNN layers
+model.add(LSTM(nb_units, input_shape=(img_rows, img_cols), return_sequences=True))
+model.add(LSTM(32))
 
 model.add(Dense(units=nb_classes))
 model.add(Activation('softmax'))
@@ -71,3 +73,8 @@ plt.plot(history.epoch, history.history['acc'])
 plt.title('accuracy')
 
 plt.show()
+
+# Evaluating the model on the test data
+score, accuracy = model.evaluate(X_test, Y_test, verbose=0)
+print('Test score:', score)
+print('Test accuracy:', accuracy)
