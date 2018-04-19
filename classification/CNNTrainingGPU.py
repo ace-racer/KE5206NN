@@ -122,3 +122,4 @@ print('Test score:', score)
 print('Test accuracy:', accuracy)
 
 model.save('cnn_complex.h5')
+plt.show()
