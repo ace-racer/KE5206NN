@@ -1,10 +1,12 @@
+
 from keras.models import Sequential
 from keras.layers import Dense, Activation, Dropout
 from keras.layers.recurrent import SimpleRNN, LSTM, GRU
 from keras.utils import np_utils
-import numpy as np
 import matplotlib.pyplot as plt
 from keras.datasets import fashion_mnist
+from keras.callbacks import EarlyStopping, ModelCheckpoint
+import time, os
 
 # Load the training and testing data
 (X_train, Y_train), (X_test, Y_test) = fashion_mnist.load_data()
@@ -56,13 +58,27 @@ model.compile(loss='categorical_crossentropy',
 
 print(model.summary())
 
-epochs = 20
+# checkpoint
+outputFolder = './output'
+if not os.path.exists(outputFolder):
+    os.makedirs(outputFolder)
+filepath=outputFolder+"/output_model.hdf5"
+checkpoint = ModelCheckpoint(filepath, monitor='acc', verbose=1,
+                             save_best_only=True, save_weights_only=True,
+                             mode='auto')
+callbacks_list = [checkpoint]
 
+earlystop = EarlyStopping(monitor='acc', min_delta=0.0001, patience=5,
+                          verbose=1, mode='auto')
+callbacks_list.append(earlystop)
+
+start = time.time()
 history = model.fit(X_train,
                     Y_train,
-                    epochs=epochs,
+                    epochs=1000, callbacks=callbacks_list,
                     batch_size=128,
                     verbose=2)
+end = time.time()
 
 plt.figure(figsize=(5, 3))
 plt.plot(history.epoch, history.history['loss'])
