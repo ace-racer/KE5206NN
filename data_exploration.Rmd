@@ -1,0 +1,111 @@
+---
+title: "Data Exploration"
+output: html_document
+---
+# Data Exploration on Online News Popularity 
+
+```{r setup, include=FALSE}
+rm(list=ls())
+setwd('C:/Users/pierl/OneDrive/Documents/R_Projects/KE5206NN')
+
+```
+
+## Read processed file from data_transform.R.
+
+```{r data}
+train_df <- read.csv('train_processed.csv')
+head(train_df)
+
+# Display a pairs (scatter) plot. Note random selection of variables if there are more than 6.
+
+# ggcorplot(cor.matrix(na.omit(train_df[,][c(5, 11, 21, 24, 27, 29)])), data=na.omit(train_df[,][c(5, 11, 21, 24, 27, 29)]), var_text_size=2, cor_text_limits=c(2,10))
+
+```
+
+## Check for missing values
+
+```{r}
+describe(train_df)
+```
+
+## Correlation Analysis
+
+```{r plot, echo=FALSE}
+
+library(corrplot, quietly=TRUE)
+
+# Correlations work for numeric variables only.
+numeric_variables   <- c("timedelta", "n_tokens_title", "n_tokens_content",
+                   "n_unique_tokens", "n_non_stop_words",
+                   "n_non_stop_unique_tokens", "num_hrefs", "num_self_hrefs",
+                   "num_imgs", "num_videos", "average_token_length",
+                   "num_keywords", "kw_min_min", "kw_max_min", "kw_avg_min",
+                   "kw_min_max", "kw_max_max", "kw_avg_max", "kw_min_avg",
+                   "kw_max_avg", "kw_avg_avg", "self_reference_min_shares",
+                   "self_reference_max_shares", "self_reference_avg_sharess",
+                   "is_weekend", "LDA_00", "LDA_01", "LDA_02", "LDA_03",
+                   "LDA_04", "global_subjectivity",
+                   "global_sentiment_polarity", "global_rate_positive_words",
+                   "global_rate_negative_words", "rate_positive_words",
+                   "rate_negative_words", "avg_positive_polarity",
+                   "min_positive_polarity", "max_positive_polarity",
+                   "avg_negative_polarity", "min_negative_polarity",
+                   "max_negative_polarity", "title_subjectivity",
+                   "title_sentiment_polarity", "abs_title_subjectivity",
+                   "abs_title_sentiment_polarity", "weekday",
+                   "data_channel_type")
+
+correlations <- cor(train_df[, numeric_variables], use="pairwise", method="pearson")
+
+# Order the correlations by their strength.
+
+correlations_ordered <- order(correlations[1,])
+correlations <- correlations[correlations_ordered, correlations_ordered]
+
+# Display the actual correlations.
+
+print(correlations)
+
+# Graphically display the correlations.
+
+corrplot(correlations, mar=c(0,0,1,0))
+title(main="Correlation train_processed.csv using Pearson",
+    sub=paste("Rattle", format(Sys.time(), "%Y-%b-%d %H:%M:%S"), Sys.info()["user"]))
+print(ncol(train_df))
+```
+
+
+The following features are very highly correlated: 
+- n_non_stop_words
+- n_unique_tokens
+- n_non_stop_unique_tokens
+
+**Propose to remove n_non_stop_words and n_unique_tokens.**
+
+kw_max_min and kw_avg_min are also highly correlated. **Propose to remove kw_max_min.**
+
+self_reference_max_shares, self_reference_min_shares and self_reference_avg_sharess are also high in correlation. **Propose to remove self_reference_max_shares and self_reference_min_shares.**
+
+kw_max_avg and kw_avg_avg also have high correlations. **Propose to remove kw_max_avg.**
+
+avg_positive_polarity and max_positive_polarity have high correlation **Propose to remove max_positive_polarity**
+
+global_sentiment_polarity and rate_positive_words have high correlation **Propose to remove rate_positive_words**
+
+avg_negative_polarity and min_negative_polarity have high correlation. **Propose to remove min_negative_polarity**
+
+global_rate_negative_words and rate_negative_words have high correlation. **Propose to remove rate_negative_words**
+
+I think we can also remove **url** as it doesn't add any value to modeling. 
+
+## Remove Unwanted Fields
+
+```{r}
+train_df <- train_df[ , -which(names(train_df) %in% c("n_non_stop_words","n_unique_tokens.", "kw_max_min.", "self_reference_max_shares", "self_reference_min_shares",
+                                          "kw_max_avg", "max_positive_polarity", "rate_positive_words", "min_negative_polarity", "rate_negative_words", "url"))]
+print(ncol(train_df))
+write.csv(train_df, file = "fields_removed.csv")
+```
+
+Explore PCA? 
+
