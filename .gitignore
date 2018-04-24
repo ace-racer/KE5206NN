@@ -2,3 +2,4 @@ regression/data/
 *.pyc
 */.ipynb_checkpoints/*
 *.h5
+data/
