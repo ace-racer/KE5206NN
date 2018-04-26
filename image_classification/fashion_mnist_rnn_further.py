@@ -1,5 +1,5 @@
 from keras.models import Sequential
-from keras.layers import Dense, Activation, Dropout
+from keras.layers import Dense, Activation, Dropout, Bidirectional
 from keras.layers.recurrent import SimpleRNN, LSTM, GRU
 from keras.utils import np_utils
 import matplotlib.pyplot as plt
@@ -41,9 +41,9 @@ model = Sequential()
 
 # Stack multiple RNN layers
 
-model.add(LSTM(nb_units, input_shape=(img_rows, img_cols), return_sequences=True))
+model.add(Bidirectional(GRU(nb_units, return_sequences=True), input_shape=(img_rows, img_cols)))
 model.add(Dropout(0.2))
-model.add(LSTM(32))
+model.add(Bidirectional(GRU(32)))
 model.add(Dense(units=nb_classes))
 model.add(Activation('softmax'))
 
@@ -90,22 +90,10 @@ score, accuracy = model.evaluate(X_test, Y_test, verbose=0)
 print('Test score:', score)
 print('Test accuracy:', accuracy)
 
-# Stacked LSTM
-# Test score: 0.49652242830842735
-# Test accuracy: 0.8836
+# Bidirectional LSTM
+# Test score: 0.4962133665855974
+# Test accuracy: 0.8986
 
-# GRU
-# Test score: 0.48214196188151837
-# Test accuracy: 0.8882
-
-# GRU with dropout 0.2 after 1st GRU layer
-# Test score: 0.3564792712450027
-# Test accuracy: 0.8943
-
-# GRU with dropout 0.2 after 2nd GRU layer
-# Test score: 0.3871491623699665
-# Test accuracy: 0.894
-
-# LSTM with dropout 0.2 after 1st GRU layer
-# Test score: 0.3853205562978983
-# Test accuracy: 0.8906
+# Bidirectional GRU
+# Test score: 0.4312557744860649
+# Test accuracy: 0.8983
