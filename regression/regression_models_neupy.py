@@ -57,7 +57,7 @@ mlp.fit(training_X, training_Y)
 y_predicted = mlp.predict(testing_X)
 print(estimators.rmse(y_predicted, testing_Y))
 
-
+# Neupy - RMSE 0.015445209155545404
 environment.reproducible()
 from neupy import algorithms, layers
 
