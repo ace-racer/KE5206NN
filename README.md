@@ -1,9 +1,9 @@
 ## Fashion MNIST
-fashion mnist v4.3.6 ia evaluate.ipynb
+- fashion mnist v4.3.6 ia evaluate.ipynb
 
-fashion mnist CapsNet predict.ipynb
+- fashion mnist CapsNet predict.ipynb
 
 ## Online News NN
-neuralnetworkv5.md
+- neuralnetworkv6.md
 
-neuralnetworkv6.md
+- OnlineNews Py-v3.ipynb
