@@ -2,6 +2,7 @@ regression/data/
 *.pyc
 <<<<<<< HEAD
 */.ipynb_checkpoints/*
+<<<<<<< HEAD
 *.h5
 data/
 =======
@@ -9,3 +10,6 @@ data/
 
 \.idea/
 >>>>>>> pier
+=======
+data/
+>>>>>>> master
