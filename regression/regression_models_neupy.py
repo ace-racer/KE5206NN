@@ -50,9 +50,10 @@ from neupy import algorithms, layers, estimators
 # y_predicted = nw.predict(testing_X)
 # print(estimators.rmse(y_predicted, testing_Y))
 
-# MLPP Scikit-Learn - RMSE 0.016366079982860895
+# MLPP Scikit-Learn - RMSE 0.01567453951930472
 from sklearn.neural_network import MLPRegressor
-mlp = MLPRegressor(hidden_layer_sizes=(100, 50, 50), max_iter=1000)
+mlp = MLPRegressor(hidden_layer_sizes=(100, 50, 50), max_iter=2000, activation='relu', solver='adam',
+                   learning_rate='adaptive', early_stopping=True)
 mlp.fit(training_X, training_Y)
 y_predicted = mlp.predict(testing_X)
 print(estimators.rmse(y_predicted, testing_Y))
@@ -64,7 +65,7 @@ from neupy import algorithms, layers
 cgnet = algorithms.ConjugateGradient(
     connection=[
         layers.Input(training_X.shape[1]),
-        layers.Sigmoid(100),
+        layers.Sigmoid(50),
         layers.Sigmoid(1),
     ],
     search_method='golden',

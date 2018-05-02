@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from keras.datasets import fashion_mnist
 from keras.callbacks import EarlyStopping, ModelCheckpoint
 import time, os
+from keras.optimizers import Adam, SGD
 
 # Load the training and testing data
 (X_train, Y_train), (X_test, Y_test) = fashion_mnist.load_data()
@@ -46,9 +47,9 @@ model.add(Dropout(0.2))
 model.add(Bidirectional(GRU(32)))
 model.add(Dense(units=nb_classes))
 model.add(Activation('softmax'))
-
+adam = Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
 model.compile(loss='categorical_crossentropy',
-              optimizer='adam',
+              optimizer=adam,
               metrics=['accuracy'])
 
 print(model.summary())
@@ -58,12 +59,12 @@ outputFolder = './output'
 if not os.path.exists(outputFolder):
     os.makedirs(outputFolder)
 filepath = outputFolder + "/output_model.hdf5"
-checkpoint = ModelCheckpoint(filepath, monitor='acc', verbose=1,
+checkpoint = ModelCheckpoint(filepath, monitor='val_acc', verbose=1,
                              save_best_only=True, save_weights_only=True,
                              mode='auto')
 callbacks_list = [checkpoint]
 
-earlystop = EarlyStopping(monitor='acc', min_delta=0.0001, patience=5,
+earlystop = EarlyStopping(monitor='val_acc', min_delta=0.001, patience=5,
                           verbose=1, mode='auto')
 callbacks_list.append(earlystop)
 
@@ -71,17 +72,33 @@ start = time.time()
 history = model.fit(X_train,
                     Y_train,
                     epochs=1000, callbacks=callbacks_list,
-                    batch_size=128,
-                    verbose=2)
+                    batch_size=256,
+                    verbose=2, validation_data=(X_test, Y_test))
 end = time.time()
 
-plt.figure(figsize=(5, 3))
-plt.plot(history.epoch, history.history['loss'])
-plt.title('loss')
+# plt.figure(figsize=(5, 3))
+# plt.plot(history.epoch, history.history['loss'])
+# plt.title('loss')
+#
+# plt.figure(figsize=(5, 3))
+# plt.plot(history.epoch, history.history['acc'])
+# plt.title('accuracy')
+#
+# plt.show()
+plt.figure()
+plt.xlabel('Epochs')
+plt.ylabel('Loss')
+plt.plot(history.history['loss'])
+plt.plot(history.history['val_loss'])
+plt.legend(['Training', 'Validation'])
+plt.show()
 
-plt.figure(figsize=(5, 3))
-plt.plot(history.epoch, history.history['acc'])
-plt.title('accuracy')
+plt.figure()
+plt.xlabel('Epochs')
+plt.ylabel('Accuracy')
+plt.plot(history.history['acc'])
+plt.plot(history.history['val_acc'])
+plt.legend(['Training', 'Validation'], loc='lower right')
 
 plt.show()
 
