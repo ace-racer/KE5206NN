@@ -1,5 +1,11 @@
 regression/data/
 *.pyc
+<<<<<<< HEAD
 */.ipynb_checkpoints/*
 *.h5
 data/
+=======
+\.idea/workspace\.xml
+
+\.idea/
+>>>>>>> pier
