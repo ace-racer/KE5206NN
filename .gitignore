@@ -1,3 +1,5 @@
 regression/data/
 *.pyc
 \.idea/workspace\.xml
+
+\.idea/
