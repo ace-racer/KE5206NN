@@ -35,15 +35,20 @@ print("Testing shapes")
 print(testing_X.shape)
 print(testing_Y.shape)
 
-data_scaler = preprocessing.MinMaxScaler()
+x_data_scaler = preprocessing.Normalizer()
+y_data_scaler = preprocessing.Normalizer()
 
-columns_to_scale = [" n_tokens_title", " n_tokens_content", " num_hrefs", " num_self_hrefs", " num_imgs", " num_videos",
-                    " average_token_length", " num_keywords", " kw_avg_min", " kw_avg_max", " kw_avg_avg",
-                    " self_reference_avg_sharess"]
-training_X.loc[:, columns_to_scale] = data_scaler.fit_transform(training_X.loc[:, columns_to_scale])
-training_Y = data_scaler.fit_transform(training_Y.reshape(-1, 1))
-testing_X.loc[:, columns_to_scale] = data_scaler.fit_transform(testing_X.loc[:, columns_to_scale])
-testing_Y = data_scaler.fit_transform(testing_Y.reshape(-1, 1))
+columns_to_scale = [" n_tokens_title", " n_tokens_content", " num_hrefs", " num_self_hrefs", " num_imgs", " num_videos", " average_token_length", " num_keywords", " kw_avg_min"," kw_avg_max", " kw_avg_avg"," self_reference_avg_sharess"]
+
+x_data_scaler.fit(training_X.loc[:, columns_to_scale])
+y_data_scaler.fit(training_Y.reshape(-1, 1))
+
+training_X.loc[:, columns_to_scale] = x_data_scaler.transform(training_X.loc[:, columns_to_scale])
+training_Y = y_data_scaler.transform(training_Y.reshape(-1, 1))
+
+testing_X.loc[:, columns_to_scale] = x_data_scaler.transform(testing_X.loc[:, columns_to_scale])
+testing_Y = y_data_scaler.transform(testing_Y.reshape(-1, 1))
+
 
 environment.reproducible()
 # nw = algorithms.GRNN(std=0.1, verbose=True)
@@ -52,12 +57,12 @@ environment.reproducible()
 # print(estimators.rmse(y_predicted, testing_Y))
 best_model = None
 best_error = 99
-for std_in in np.array([0.1, 0.5, 0.8, 1.0, 1.2, 1.4]):
+for std_in in np.array([0.01, 0.1, 0.5, 0.8, 1.0, 1.2, 1.4, 2.0, 5.0, 10.0]):
     grnnet = algorithms.GRNN(std=std_in, verbose=True)
     grnnet.train(training_X, training_Y)
     predicted = grnnet.predict(testing_X)
     error = scorer(testing_Y, predicted)
-    print("GRNN RMSE = {:.3f}\n".format(error))
+    print("GRNN RMSE = {:.5f}\n".format(error))
     if error < best_error:
         print("New Best Error Found: " + str(error))
         best_error = error
