@@ -82,7 +82,11 @@ print("MAE (no. of shares) = " + str(actual_mae.squeeze()))
 
 # plot the loss curve
 import matplotlib.pyplot as plt
-pd.DataFrame(bs.loss_curve_).plot()
+df = pd.DataFrame(bs.loss_curve_)
+df.columns=['loss']
+ax = df.plot()
+ax.set_xlabel('epochs')
+ax.set_ylabel('loss')
 plt.show()
 
 # Best parameters for Randomized Search
