@@ -35,8 +35,8 @@ print("Testing shapes")
 print(testing_X.shape)
 print(testing_Y.shape)
 
-x_data_scaler = preprocessing.Normalizer()
-y_data_scaler = preprocessing.Normalizer()
+x_data_scaler = preprocessing.MinMaxScaler()
+y_data_scaler = preprocessing.MinMaxScaler()
 
 columns_to_scale = [" n_tokens_title", " n_tokens_content", " num_hrefs", " num_self_hrefs", " num_imgs", " num_videos", " average_token_length", " num_keywords", " kw_avg_min"," kw_avg_max", " kw_avg_avg"," self_reference_avg_sharess"]
 
@@ -51,35 +51,30 @@ testing_Y = y_data_scaler.transform(testing_Y.reshape(-1, 1))
 
 
 environment.reproducible()
-# nw = algorithms.GRNN(std=0.1, verbose=True)
-# nw.train(training_X, training_Y)
-# y_predicted = nw.predict(testing_X)
-# print(estimators.rmse(y_predicted, testing_Y))
-best_model = None
-best_error = 99
-for std_in in np.array([0.01, 0.1, 0.5, 0.8, 1.0, 1.2, 1.4, 2.0, 5.0, 10.0]):
-    grnnet = algorithms.GRNN(std=std_in, verbose=True)
-    grnnet.train(training_X, training_Y)
-    predicted = grnnet.predict(testing_X)
-    error = scorer(testing_Y, predicted)
-    print("GRNN RMSE = {:.5f}\n".format(error))
-    if error < best_error:
-        print("New Best Error Found: " + str(error))
-        best_error = error
-        best_model = grnnet
 
+# best_model = None
+# best_error = 99
+# for std_in in np.array([0.01, 0.1, 0.5, 0.8, 1.0, 1.2, 1.4, 2.0, 5.0, 10.0]):
+#     grnnet = algorithms.GRNN(std=std_in, verbose=True)
+#     grnnet.train(training_X, training_Y)
+#     predicted = grnnet.predict(testing_X)
+#     error = scorer(testing_Y, predicted)
+#     print("GRNN RMSE = {:.5f}\n".format(error))
+#     if error < best_error:
+#         print("New Best Error Found: " + str(error))
+#         best_error = error
+#         best_model = grnnet
+
+grnnet2 = algorithms.GRNN(std=0.1, verbose=True)
+grnnet2.train(training_X, training_Y)
+y_predicted = grnnet2.predict(testing_X)
+print("RMSE = " + str(estimators.rmse(y_predicted, testing_Y.ravel())))
+print("MAE = " + str(estimators.mae(y_predicted, testing_Y.ravel())))
+actual_mae = y_data_scaler.inverse_transform(estimators.mae(y_predicted, testing_Y))
+print("MAE (no. of shares) = " + str(actual_mae.squeeze()))
+
+# GRNN Best values
 #
-# print("Run Random Search CV")
-# grnnet.verbose = False
-# random_search = grid_search.GridSearchCV(
-#     grnnet,
-#     param_distributions={'std': np.array([0.1, 0.5])},
-#     n_iter=5,
-#     scoring=scorer,
-#
-# )
-
-# parameters = {'std': [0.1, 0.5]}
-# clf = GridSearchCV(grnnet, parameters, scoring='neg_mean_squared_error')
-# clf.fit(training_X, training_Y)
-
+# RMSE = 0.019625235702837703
+# MAE = 0.004645349837893423
+# MAE (no. of shares) = 3208.1448827317818
