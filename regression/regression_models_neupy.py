@@ -58,6 +58,8 @@ print("MAE = " + str(estimators.mae(y_predicted, testing_Y.ravel())))
 actual_mae = y_data_scaler.inverse_transform(estimators.mae(y_predicted, testing_Y))
 print("MAE (no. of shares) = " + str(actual_mae.squeeze()))
 
+
+
 # Randomized search uses 3-fold cross validation by default
 rs = RandomizedSearchCV(mlp, param_distributions={
     'learning_rate': ["constant", "invscaling", "adaptive"],
@@ -77,6 +79,11 @@ print("RMSE = " + str(estimators.rmse(y_predicted, testing_Y.ravel())))
 print("MAE = " + str(estimators.mae(y_predicted, testing_Y.ravel())))
 actual_mae = y_data_scaler.inverse_transform(estimators.mae(y_predicted, testing_Y))
 print("MAE (no. of shares) = " + str(actual_mae.squeeze()))
+
+# plot the loss curve
+import matplotlib.pyplot as plt
+pd.DataFrame(bs.loss_curve_).plot()
+plt.show()
 
 # Best parameters for Randomized Search
 #
