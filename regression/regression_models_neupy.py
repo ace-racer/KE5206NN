@@ -49,8 +49,8 @@ from sklearn.grid_search import RandomizedSearchCV
 from neupy import estimators
 
 mlp = MLPRegressor(hidden_layer_sizes=(1000, 100, 100), max_iter=2000, activation='tanh', solver='sgd',
-                   learning_rate='constant', early_stopping=True, learning_rate_init=0.04, alpha=0.5, beta_1=0.616,
-                   beta_2=0.194)
+                   learning_rate='constant', early_stopping=True, learning_rate_init=0.0218, alpha=0.215, beta_1=0.5,
+                   beta_2=0.76)
 mlp.fit(training_X, training_Y)
 y_predicted = mlp.predict(testing_X)
 print("RMSE = " + str(estimators.rmse(y_predicted, testing_Y.ravel())))
@@ -58,18 +58,16 @@ print("MAE = " + str(estimators.mae(y_predicted, testing_Y.ravel())))
 actual_mae = y_data_scaler.inverse_transform(estimators.mae(y_predicted, testing_Y))
 print("MAE (no. of shares) = " + str(actual_mae.squeeze()))
 
-
-
 # Randomized search uses 3-fold cross validation by default
 rs = RandomizedSearchCV(mlp, param_distributions={
     'learning_rate': ["constant", "invscaling", "adaptive"],
-    'hidden_layer_sizes': [(100, 50, 50), (1000, 100, 100)],
+    'hidden_layer_sizes': [(100, 10, 10), (100, 50, 25), (1000, 100, 100), (1000, 500, 10), (2000, 1000, 50)],
     'learning_rate_init': stats.uniform(0.001, 0.05),
     'solver': ["sgd", "adam", "lbfgs"],
     'activation': ["relu", "tanh"],
     'alpha': stats.uniform(0.0001, 1),
     'beta_1': stats.uniform(0, 1.0),
-    'beta_2': stats.uniform(0, 1.0)}, verbose=2, n_jobs=-1)
+    'beta_2': stats.uniform(0, 1.0)}, verbose=2)
 
 rs.fit(training_X, training_Y.ravel())
 bs = rs.best_estimator_
@@ -82,8 +80,9 @@ print("MAE (no. of shares) = " + str(actual_mae.squeeze()))
 
 # plot the loss curve
 import matplotlib.pyplot as plt
+
 df = pd.DataFrame(bs.loss_curve_)
-df.columns=['loss']
+df.columns = ['loss']
 ax = df.plot()
 ax.set_xlabel('epochs')
 ax.set_ylabel('loss')
