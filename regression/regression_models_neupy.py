@@ -42,7 +42,7 @@ training_Y = y_data_scaler.transform(training_Y.reshape(-1, 1))
 testing_X.loc[:, columns_to_scale] = x_data_scaler.transform(testing_X.loc[:, columns_to_scale])
 testing_Y = y_data_scaler.transform(testing_Y.reshape(-1, 1))
 
-# MLPP Scikit-Learn - RMSE 0.01567453951930472
+# MLPP Scikit-Learn
 from sklearn.neural_network import MLPRegressor
 from scipy import stats
 from sklearn.grid_search import RandomizedSearchCV
@@ -61,13 +61,13 @@ print("MAE (no. of shares) = " + str(actual_mae.squeeze()))
 # Randomized search uses 3-fold cross validation by default
 rs = RandomizedSearchCV(mlp, param_distributions={
     'learning_rate': ["constant", "invscaling", "adaptive"],
-    'hidden_layer_sizes': [(100, 10, 10), (100, 50, 25), (1000, 100, 100), (1000, 500, 10), (2000, 1000, 50)],
+    'hidden_layer_sizes': [(100, 10, 10), (100, 50, 25), (1000, 100, 100)],
     'learning_rate_init': stats.uniform(0.001, 0.05),
     'solver': ["sgd", "adam", "lbfgs"],
     'activation': ["relu", "tanh"],
     'alpha': stats.uniform(0.0001, 1),
     'beta_1': stats.uniform(0, 1.0),
-    'beta_2': stats.uniform(0, 1.0)}, verbose=2)
+    'beta_2': stats.uniform(0, 1.0)}, verbose=2, scoring="neg_mean_absolute_error")
 
 rs.fit(training_X, training_Y.ravel())
 bs = rs.best_estimator_
@@ -87,6 +87,12 @@ ax = df.plot()
 ax.set_xlabel('epochs')
 ax.set_ylabel('loss')
 plt.show()
+
+# Save the best MLP model
+import _pickle
+with open('/home/pier/Machine_Learning/KE5206NN/regression/regression_models/multi_layer_perceptron.pkl', 'wb') as fid:
+    _pickle.dump(mlp, fid)
+
 
 # Best parameters for Randomized Search
 #

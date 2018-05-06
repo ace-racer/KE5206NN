@@ -65,13 +65,18 @@ environment.reproducible()
 #         best_error = error
 #         best_model = grnnet
 
-grnnet2 = algorithms.GRNN(std=0.1, verbose=True)
+grnnet2 = algorithms.GRNN(std=0.2, verbose=True)
 grnnet2.train(training_X, training_Y)
 y_predicted = grnnet2.predict(testing_X)
 print("RMSE = " + str(estimators.rmse(y_predicted, testing_Y.ravel())))
 print("MAE = " + str(estimators.mae(y_predicted, testing_Y.ravel())))
 actual_mae = y_data_scaler.inverse_transform(estimators.mae(y_predicted, testing_Y))
 print("MAE (no. of shares) = " + str(actual_mae.squeeze()))
+
+# Save the best GRNN model
+import _pickle
+with open('/home/pier/Machine_Learning/KE5206NN/regression/regression_models/grnn.pkl', 'wb') as fid:
+    _pickle.dump(grnnet2, fid)
 
 # GRNN Best values
 #
