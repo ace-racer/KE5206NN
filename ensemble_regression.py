@@ -99,3 +99,22 @@ ensemble_mae = estimators.mae(y_ensemble_predicted, testing_Y.ravel())
 
 print(y_ensemble_predicted.shape)
 print(y_ensemble_predicted[1:10])
+
+
+models = [mlp, grnn]
+y_ensemble_predicted = np.zeros(shape=(testing_X.shape[0], 1))
+denom = 0
+
+# for model in models:
+#     y_predicted = model.predict(testing_X)
+#     if (model.__class__ == grnn.__class__): # take care of neupy diff format
+#         y_predicted = y_grnn_predicted.ravel().transpose()
+#     mae = estimators.mae(y_predicted, testing_Y.ravel())
+#     denom = denom + (1.0 / (1+mae))
+#     y_ensemble_predicted = np.add(y_ensemble_predicted, ((1.0 / (1+mae)) * y_predicted))
+#
+# ensemble_mae = estimators.mae(y_ensemble_predicted, testing_Y.ravel())
+# ensemble_mae = ensemble_mae / denom
+# print("Ensemble MAE = " + str(ensemble_mae))
+# actual_mae = y_data_scaler.inverse_transform(ensemble_mae)
+# print("Ensemble MAE (no. of shares) = " + str(actual_mae.squeeze()))
