@@ -4,17 +4,13 @@ from neupy import environment
 from sklearn.model_selection import train_test_split
 from neupy import environment
 
-# training_df = pd.read_csv(
-#     "/home/pier/Machine_Learning/KE5206NN/regression/data_with_fields_removed/train_70.0_fields_removed.csv")
-training_df = pd.read_csv(
-    "/home/pier/Machine_Learning/KE5206NN/regression/data_with_fields_removed/train_70.0_updated.csv")
+training_df = pd.read_csv("/Users/pierlim/PycharmProjects/KE5206NN/regression/data_with_fields_removed/train_70.0_updated.csv")
 training_X = training_df.loc[:, training_df.columns != " shares"]
 training_Y = training_df.loc[:, " shares"]
 
+test_df = pd.read_csv("/Users/pierlim/PycharmProjects/KE5206NN/regression/data_with_fields_removed/test_30.0_updated.csv")
 # test_df = pd.read_csv(
-#     "/home/pier/Machine_Learning/KE5206NN/regression/data_with_fields_removed/test_30.0_fields_removed.csv")
-test_df = pd.read_csv(
-    "/home/pier/Machine_Learning/KE5206NN/regression/data_with_fields_removed/test_30.0_updated.csv")
+#     "/home/pier/Machine_Learning/KE5206NN/regression/data_with_fields_removed/test_30.0_updated.csv")
 testing_X = test_df.loc[:, test_df.columns != " shares"]
 testing_Y = test_df.loc[:, " shares"]
 
@@ -48,9 +44,10 @@ from scipy import stats
 from sklearn.grid_search import RandomizedSearchCV
 from neupy import estimators
 
-mlp = MLPRegressor(hidden_layer_sizes=(1000, 100, 100), max_iter=2000, activation='tanh', solver='sgd',
-                   learning_rate='constant', early_stopping=True, learning_rate_init=0.0218, alpha=0.215, beta_1=0.5,
-                   beta_2=0.76)
+# mlp = MLPRegressor(hidden_layer_sizes=(1000, 100, 100), max_iter=2000, activation='tanh', solver='sgd',
+#                    learning_rate='constant', early_stopping=True, learning_rate_init=0.0218, alpha=0.215, beta_1=0.5,
+#                    beta_2=0.76)
+mlp = MLPRegressor(hidden_layer_sizes=(10, 10, 10), max_iter=2000)
 mlp.fit(training_X, training_Y)
 y_predicted = mlp.predict(testing_X)
 print("RMSE = " + str(estimators.rmse(y_predicted, testing_Y.ravel())))
@@ -90,7 +87,7 @@ plt.show()
 
 # Save the best MLP model
 import _pickle
-with open('/home/pier/Machine_Learning/KE5206NN/regression/regression_models/multi_layer_perceptron.pkl', 'wb') as fid:
+with open('/home/pier/Machine_Learning/KE5206NN/regression/regression_models/test.pkl', 'wb') as fid:
     _pickle.dump(mlp, fid)
 
 
