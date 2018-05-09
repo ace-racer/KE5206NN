@@ -1,5 +1,9 @@
 regression/data/
 *.pyc
+<<<<<<< HEAD
 \.idea/workspace\.xml
 
 \.idea/
+=======
+*/.ipynb_checkpoints/*
+>>>>>>> Vaibhav
