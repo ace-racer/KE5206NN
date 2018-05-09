@@ -11,7 +11,8 @@ from sklearn.decomposition import PCA
 import os
 
 # Load Data
-os.chdir("/home/pier/Machine_Learning/KE5206NN/diabetes_svm")
+# os.chdir("/home/pier/Machine_Learning/KE5206NN/diabetes_svm")
+os.chdir("/Users/pierlim/PycharmProjects/KE5206NN/diabetes_svm")
 dfs = pd.read_excel("data/diabetic_data.xlsx", sheet_name=None)
 df = dfs['in']
 df = df.iloc[:, 2:]
@@ -81,5 +82,36 @@ scaler = MinMaxScaler()
 X_train = pd.DataFrame(scaler.fit_transform(X_train))
 X_test = pd.DataFrame(scaler.transform(X_test))
 clf = LinearSVC().fit(X_train, y_train)
+print('training accuracy: {:.2f}'.format(clf.score(X_train, y_train)))
+print('test accuracy: {:.2f}'.format(clf.score(X_test, y_test)))
+
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.svm import SVC
+
+# Memory Error!
+# polynomial_svm = Pipeline([
+#     ("poly_features", PolynomialFeatures(degree=3)),
+#     ("scaler", MinMaxScaler()),
+#     ("svm_clf", LinearSVC(C=10, loss="hinge", random_state=42))
+# ])
+#
+# polynomial_svm.fit(X_train, y_train)
+# print('training accuracy: {:.2f}'.format(clf.score(X_train, y_train)))
+# print('test accuracy: {:.2f}'.format(clf.score(X_test, y_test)))
+
+poly_kernel_svm_clf = Pipeline([
+    ("scaler", MinMaxScaler()),
+    ("svm_clf", SVC(kernel="poly", degree=3, coef0=1, C=5))
+])
+poly_kernel_svm_clf.fit(X_train, y_train)
+print('training accuracy: {:.2f}'.format(clf.score(X_train, y_train)))
+print('test accuracy: {:.2f}'.format(clf.score(X_test, y_test)))
+
+rbf_kernel_svm_clf = Pipeline([
+    ("scaler", MinMaxScaler()),
+    ("svm_clf", SVC(kernel="rbf", gamma=5, C=0.001))
+])
+rbf_kernel_svm_clf.fit(X_train, y_train)
 print('training accuracy: {:.2f}'.format(clf.score(X_train, y_train)))
 print('test accuracy: {:.2f}'.format(clf.score(X_test, y_test)))
