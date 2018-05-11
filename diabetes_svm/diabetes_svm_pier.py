@@ -11,8 +11,8 @@ from sklearn.decomposition import PCA
 import os
 
 # Load Data
-# os.chdir("/home/pier/Machine_Learning/KE5206NN/diabetes_svm")
-os.chdir("/Users/pierlim/PycharmProjects/KE5206NN/diabetes_svm")
+os.chdir("/home/pier/Machine_Learning/KE5206NN/diabetes_svm")
+# os.chdir("/Users/pierlim/PycharmProjects/KE5206NN/diabetes_svm")
 dfs = pd.read_excel("data/diabetic_data.xlsx", sheet_name=None)
 df = dfs['in']
 df = df.iloc[:, 2:]
@@ -101,17 +101,36 @@ from sklearn.svm import SVC
 # print('test accuracy: {:.2f}'.format(clf.score(X_test, y_test)))
 
 poly_kernel_svm_clf = Pipeline([
-    ("scaler", MinMaxScaler()),
-    ("svm_clf", SVC(kernel="poly", degree=3, coef0=1, C=5))
+    ("scaler", MinMaxScaler(feature_range=(-1, 1))),
+    ("svm_clf", SVC(kernel="poly", degree=3, coef0=1, C=5, verbose=1))
 ])
 poly_kernel_svm_clf.fit(X_train, y_train)
-print('training accuracy: {:.2f}'.format(clf.score(X_train, y_train)))
-print('test accuracy: {:.2f}'.format(clf.score(X_test, y_test)))
+print('training accuracy: {:.2f}'.format(poly_kernel_svm_clf.score(X_train, y_train)))
+print('test accuracy: {:.2f}'.format(poly_kernel_svm_clf.score(X_test, y_test)))
+# ...............................................................................................
+# Warning: using -h 0 may be faster
+# *.............................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................*..................*
+# optimization finished, #iter = 894467
+# obj = -79154.995305, rho = 0.916367
+# nSV = 21294, nBSV = 11991
+# ...................................................................................................................
+# Warning: using -h 0 may be faster
+# *......................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................*.................*
+# optimization finished, #iter = 665365
+# obj = -79224.925456, rho = 0.746238
+# nSV = 20465, nBSV = 12927
+# ..............................................................*.........................*..*
+# optimization finished, #iter = 88652
+# obj = -234873.372288, rho = -6.361463
+# nSV = 48352, nBSV = 47034
+# Total nSV = 59022
+# [LibSVM]training accuracy: 0.58
+# test accuracy: 0.57
 
 rbf_kernel_svm_clf = Pipeline([
-    ("scaler", MinMaxScaler()),
-    ("svm_clf", SVC(kernel="rbf", gamma=5, C=0.001))
+    ("scaler", MinMaxScaler(feature_range=(-1, 1))),
+    ("svm_clf", SVC(kernel="rbf", gamma=5, C=0.001, verbose=1))
 ])
 rbf_kernel_svm_clf.fit(X_train, y_train)
-print('training accuracy: {:.2f}'.format(clf.score(X_train, y_train)))
-print('test accuracy: {:.2f}'.format(clf.score(X_test, y_test)))
+print('training accuracy: {:.2f}'.format(rbf_kernel_svm_clf.score(X_train, y_train)))
+print('test accuracy: {:.2f}'.format(rbf_kernel_svm_clf.score(X_test, y_test)))
