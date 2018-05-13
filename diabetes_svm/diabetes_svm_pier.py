@@ -10,9 +10,12 @@ from sklearn.svm import LinearSVC
 from sklearn.decomposition import PCA
 import os
 
+enable_one_hot = False
+enable_scaling = False
+
 # Load Data
-os.chdir("/home/pier/Machine_Learning/KE5206NN/diabetes_svm")
-# os.chdir("/Users/pierlim/PycharmProjects/KE5206NN/diabetes_svm")
+# os.chdir("/home/pier/Machine_Learning/KE5206NN/diabetes_svm")
+os.chdir("/Users/pierlim/PycharmProjects/KE5206NN/diabetes_svm")
 dfs = pd.read_excel("data/diabetic_data.xlsx", sheet_name=None)
 df = dfs['in']
 df = df.iloc[:, 2:]
@@ -57,20 +60,21 @@ obj_df.head()
 df = df.fillna({'weight': df['weight'].value_counts().index[0]})
 df = df.fillna({'payer_code': 'NOT_SPECIFIED', 'medical_specialty': 'NOT_SPECIFIED'})
 
-# for col in list(obj_df.columns.values):
-#     df[col] = df[col].astype('category')
-df['age'] = df['age'].astype('category')
-df['age'] = df['age'].cat.codes
-df['weight'] = df['weight'].astype('category')
-df['weight'] = df['weight'].cat.codes
-df['readmitted'] = df['readmitted'].astype('category')
-df['readmitted'] = df['readmitted'].cat.codes
+enable_categorization = True
+if enable_categorization:
+    df['age'] = df['age'].astype('category')
+    df['age'] = df['age'].cat.codes
+    df['weight'] = df['weight'].astype('category')
+    df['weight'] = df['weight'].cat.codes
+    df['readmitted'] = df['readmitted'].astype('category')
+    df['readmitted'] = df['readmitted'].cat.codes
 
-# one hot the rest
-column_names = list(df.select_dtypes(include=['object']).columns.values)
-one_hot = pd.get_dummies(df.select_dtypes(include=['object']))
-df = df.drop(column_names, axis=1)
-df = df.join(one_hot)
+if enable_one_hot:
+    # one hot the rest
+    column_names = list(df.select_dtypes(include=['object']).columns.values)
+    one_hot = pd.get_dummies(df.select_dtypes(include=['object']))
+    df = df.drop(column_names, axis=1)
+    df = df.join(one_hot)
 
 df_x = df.loc[:, df.columns != 'readmitted']
 df_y = df.loc[:, df.columns == 'readmitted']
@@ -78,10 +82,23 @@ df_y = df.loc[:, df.columns == 'readmitted']
 X_train, X_test, y_train, y_test = train_test_split(
     df_x, df_y, test_size=0.3, random_state=42)
 
-scaler = MinMaxScaler()
-X_train = pd.DataFrame(scaler.fit_transform(X_train))
-X_test = pd.DataFrame(scaler.transform(X_test))
-clf = LinearSVC().fit(X_train, y_train)
+from sklearn.svm import SVC
+
+if enable_scaling:
+    scaler = MinMaxScaler()
+    X_train = pd.DataFrame(scaler.fit_transform(X_train))
+    X_test = pd.DataFrame(scaler.transform(X_test))
+# for duality in [True, False]:
+#     for var_c in [5, 10, 15, 20, 25, 30, 35, 40, 45, 50]:
+#         print("var c = %d and duality is %d" % (var_c, duality))
+#         clf = LinearSVC(max_iter=5000, dual=duality, C=var_c, random_state=42).fit(X_train,
+#                                                                                    y_train.values.ravel())
+#         # clf = SVC(kernel='linear', class_weight='balanced', C=1.0, random_state=42, verbose=1).fit(X_train,
+#         #                                                                                           y_train.values.ravel())
+#         print('training accuracy: {:.2f}'.format(clf.score(X_train, y_train)))
+#         print('test accuracy: {:.2f}'.format(clf.score(X_test, y_test)))
+
+clf = LinearSVC(max_iter=5000, dual=False, C=10, random_state=42).fit(X_train,y_train.values.ravel())
 print('training accuracy: {:.2f}'.format(clf.score(X_train, y_train)))
 print('test accuracy: {:.2f}'.format(clf.score(X_test, y_test)))
 
@@ -104,9 +121,9 @@ poly_kernel_svm_clf = Pipeline([
     ("scaler", MinMaxScaler(feature_range=(-1, 1))),
     ("svm_clf", SVC(kernel="poly", degree=3, coef0=1, C=5, verbose=1))
 ])
-poly_kernel_svm_clf.fit(X_train, y_train)
-print('training accuracy: {:.2f}'.format(poly_kernel_svm_clf.score(X_train, y_train)))
-print('test accuracy: {:.2f}'.format(poly_kernel_svm_clf.score(X_test, y_test)))
+poly_kernel_svm_clf.fit(X_train, y_train.values.ravel())
+print('training accuracy: {:.2f}'.format(poly_kernel_svm_clf.score(X_train, y_train.values.ravel())))
+print('test accuracy: {:.2f}'.format(poly_kernel_svm_clf.score(X_test, y_test.values.ravel())))
 # ...............................................................................................
 # Warning: using -h 0 may be faster
 # *.............................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................*..................*
@@ -134,3 +151,18 @@ rbf_kernel_svm_clf = Pipeline([
 rbf_kernel_svm_clf.fit(X_train, y_train)
 print('training accuracy: {:.2f}'.format(rbf_kernel_svm_clf.score(X_train, y_train)))
 print('test accuracy: {:.2f}'.format(rbf_kernel_svm_clf.score(X_test, y_test)))
+
+# Try bagging
+from sklearn.ensemble import BaggingClassifier
+from sklearn.multiclass import OneVsRestClassifier
+from sklearn.svm import SVC
+
+n_estimators = 10
+clf = OneVsRestClassifier(
+    BaggingClassifier(SVC(kernel='linear', probability=True, class_weight='balanced', verbose=1),
+                      max_samples=1.0 / n_estimators,
+                      n_estimators=n_estimators, verbose=1, n_jobs=4))
+clf.fit(X_train, y_train)
+print('training accuracy: {:.2f}'.format(clf.score(X_train, y_train)))
+print('test accuracy: {:.2f}'.format(clf.score(X_test, y_test)))
+# proba = clf.predict_proba(X)
