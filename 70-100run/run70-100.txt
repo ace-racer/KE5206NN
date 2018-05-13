@@ -1,0 +1,397 @@
+race [Caucasian, AfricanAmerican, ?, Hispanic, Other, Asian]
+Categories (6, object): [Caucasian, AfricanAmerican, ?, Hispanic, Other, Asian]
+**************************************************
+gender [Male, Female, Unknown/Invalid]
+Categories (3, object): [Male, Female, Unknown/Invalid]
+**************************************************
+age [[70-80), [80-90), [90-100)]
+Categories (3, object): [[70-80), [80-90), [90-100)]
+**************************************************
+weight [?, [50-75), [75-100), [100-125), [25-50), [0-25), [125-150), [150-175), [175-200)]
+Categories (9, object): [?, [50-75), [75-100), [100-125), ..., [0-25), [125-150), [150-175),
+                         [175-200)]
+**************************************************
+admission_type_id [1, 2, 3, 6, 4, 5, 8, 7]
+Categories (8, object): [1, 2, 3, 6, 4, 5, 8, 7]
+**************************************************
+discharge_disposition_id [1, 3, 6, 2, 5, ..., 15, 28, 24, 19, 27]
+Length: 25
+Categories (25, object): [1, 3, 6, 2, ..., 28, 24, 19, 27]
+**************************************************
+admission_source_id [7, 4, 2, 1, 5, ..., 14, 11, 22, 25, 13]
+Length: 17
+Categories (17, object): [7, 4, 2, 1, ..., 11, 22, 25, 13]
+**************************************************
+time_in_hospital [5, 13, 12, 10, 6, ..., 7, 9, 4, 8, 14]
+Length: 14
+Categories (14, object): [5, 13, 12, 10, ..., 9, 4, 8, 14]
+**************************************************
+payer_code [?, MC, UN, HM, CM, ..., DM, CH, PO, SI, MP]
+Length: 17
+Categories (17, object): [?, MC, UN, HM, ..., CH, PO, SI, MP]
+**************************************************
+medical_specialty [?, InternalMedicine, Family/GeneralPractice, Cardiology, Surgery-General, ..., Hospitalist, Neurophysiology, Endocrinology-Metabolism, DCPTEAM, Resident]
+Length: 57
+Categories (57, object): [?, InternalMedicine, Family/GeneralPractice, Cardiology, ...,
+                          Neurophysiology, Endocrinology-Metabolism, DCPTEAM, Resident]
+**************************************************
+num_lab_procedures [73, 68, 33, 55, 35, ..., 100, 106, 99, 126, 103]
+Length: 109
+Categories (109, object): [73, 68, 33, 55, ..., 106, 99, 126, 103]
+**************************************************
+num_procedures [0, 2, 3, 1, 5, 4, 6]
+Categories (7, object): [0, 2, 3, 1, 5, 4, 6]
+**************************************************
+num_medications [12, 28, 18, 31, 23, ..., 60, 72, 62, 74, 64]
+Length: 72
+Categories (72, object): [12, 28, 18, 31, ..., 72, 62, 74, 64]
+**************************************************
+number_outpatient [0, 1, 3, 8, 2, ..., 22, 39, 34, 25, 33]
+Length: 31
+Categories (31, object): [0, 1, 3, 8, ..., 39, 34, 25, 33]
+**************************************************
+number_emergency [0, 1, 2, 4, 5, 3, 8, 6, 25, 7]
+Categories (10, object): [0, 1, 2, 4, ..., 8, 6, 25, 7]
+**************************************************
+number_inpatient [0, 1, 2, 3, 6, ..., 9, 10, 11, 12, 13]
+Length: 14
+Categories (14, object): [0, 1, 2, 3, ..., 10, 11, 12, 13]
+**************************************************
+diag_1 [428, 398, 434, 402, 737, ..., 250.01, 941, 58, 52, 377]
+Length: 561
+Categories (561, object): [428, 398, 434, 402, ..., 941, 58, 52, 377]
+**************************************************
+diag_2 [492, 427, 198, 411, 425, ..., 308, V60, 741, 452, 837]
+Length: 576
+Categories (576, object): [492, 427, 198, 411, ..., V60, 741, 452, 837]
+**************************************************
+diag_3 [250, 38, 486, 427, 416, ..., 271, 942, 480, 565, 334]
+Length: 615
+Categories (615, object): [250, 38, 486, 427, ..., 942, 480, 565, 334]
+**************************************************
+number_diagnoses [8, 9, 6, 7, 5, ..., 13, 15, 11, 14, 10]
+Length: 16
+Categories (16, object): [8, 9, 6, 7, ..., 15, 11, 14, 10]
+**************************************************
+max_glu_serum [None, >300, Norm, >200]
+Categories (4, object): [None, >300, Norm, >200]
+**************************************************
+A1Cresult [None, >7, Norm, >8]
+Categories (4, object): [None, >7, Norm, >8]
+**************************************************
+metformin [No, Steady, Up, Down]
+Categories (4, object): [No, Steady, Up, Down]
+**************************************************
+repaglinide [No, Steady, Down, Up]
+Categories (4, object): [No, Steady, Down, Up]
+**************************************************
+nateglinide [No, Steady, Down, Up]
+Categories (4, object): [No, Steady, Down, Up]
+**************************************************
+chlorpropamide [No, Steady, Down, Up]
+Categories (4, object): [No, Steady, Down, Up]
+**************************************************
+glimepiride [No, Steady, Down, Up]
+Categories (4, object): [No, Steady, Down, Up]
+**************************************************
+acetohexamide [No, Steady]
+Categories (2, object): [No, Steady]
+**************************************************
+glipizide [No, Steady, Up, Down]
+Categories (4, object): [No, Steady, Up, Down]
+**************************************************
+glyburide [Steady, No, Down, Up]
+Categories (4, object): [Steady, No, Down, Up]
+**************************************************
+tolbutamide [No, Steady]
+Categories (2, object): [No, Steady]
+**************************************************
+pioglitazone [No, Steady, Up, Down]
+Categories (4, object): [No, Steady, Up, Down]
+**************************************************
+rosiglitazone [No, Steady, Up, Down]
+Categories (4, object): [No, Steady, Up, Down]
+**************************************************
+acarbose [No, Steady, Up, Down]
+Categories (4, object): [No, Steady, Up, Down]
+**************************************************
+miglitol [No, Steady, Down, Up]
+Categories (4, object): [No, Steady, Down, Up]
+**************************************************
+troglitazone [No, Steady]
+Categories (2, object): [No, Steady]
+**************************************************
+tolazamide [No, Steady, Up]
+Categories (3, object): [No, Steady, Up]
+**************************************************
+examide [No]
+Categories (1, object): [No]
+**************************************************
+citoglipton [No]
+Categories (1, object): [No]
+**************************************************
+insulin [No, Steady, Down, Up]
+Categories (4, object): [No, Steady, Down, Up]
+**************************************************
+glyburide-metformin [No, Steady, Down, Up]
+Categories (4, object): [No, Steady, Down, Up]
+**************************************************
+glipizide-metformin [No, Steady]
+Categories (2, object): [No, Steady]
+**************************************************
+glimepiride-pioglitazone [No]
+Categories (1, object): [No]
+**************************************************
+metformin-rosiglitazone [No, Steady]
+Categories (2, object): [No, Steady]
+**************************************************
+metformin-pioglitazone [No]
+Categories (1, object): [No]
+**************************************************
+change [No, Ch]
+Categories (2, object): [No, Ch]
+**************************************************
+diabetesMed [Yes, No]
+Categories (2, object): [Yes, No]
+**************************************************
+readmitted [>30, NO, <30]
+Categories (3, object): [>30, NO, <30]
+**************************************************
+race [Caucasian, AfricanAmerican, Hispanic, Other, Asian]
+Categories (5, object): [Caucasian, AfricanAmerican, Hispanic, Other, Asian]
+**************************************************
+gender [Male, Female]
+Categories (2, object): [Male, Female]
+**************************************************
+age [[70-80), [80-90), [90-100)]
+Categories (3, object): [[70-80), [80-90), [90-100)]
+**************************************************
+admission_type_id [1, 2, 3, 6, 4, 5, 8, 7]
+Categories (8, object): [1, 2, 3, 6, 4, 5, 8, 7]
+**************************************************
+discharge_disposition_id [1, 3, 6, 2, 5, ..., 15, 28, 24, 19, 27]
+Length: 25
+Categories (25, object): [1, 3, 6, 2, ..., 28, 24, 19, 27]
+**************************************************
+admission_source_id [7, 4, 1, 2, 5, ..., 14, 11, 22, 25, 13]
+Length: 17
+Categories (17, object): [7, 4, 1, 2, ..., 11, 22, 25, 13]
+**************************************************.......................**
+optimization finished, #iter = 234
+Objective value = -13629.888771
+nSV = 33538
+.......................**
+optimization finished, #iter = 235
+Objective value = -30384.023091
+nSV = 33539
+.......................*
+optimization finished, #iter = 231
+Objective value = -32113.105792
+nSV = 33489
+
+time_in_hospital [5, 13, 12, 10, 2, ..., 7, 9, 4, 14, 8]
+Length: 14
+Categories (14, object): [5, 13, 12, 10, ..., 9, 4, 14, 8]
+**************************************************
+num_lab_procedures [73, 68, 33, 55, 35, ..., 100, 106, 99, 126, 103]
+Length: 109
+Categories (109, object): [73, 68, 33, 55, ..., 106, 99, 126, 103]
+**************************************************
+num_procedures [0, 2, 3, 1, 5, 4, 6]
+Categories (7, object): [0, 2, 3, 1, 5, 4, 6]
+**************************************************
+num_medications [12, 28, 18, 31, 23, ..., 60, 72, 62, 74, 64]
+Length: 72
+Categories (72, object): [12, 28, 18, 31, ..., 72, 62, 74, 64]
+**************************************************
+number_outpatient [0, 1, 3, 8, 2, ..., 22, 39, 34, 25, 33]
+Length: 31
+Categories (31, object): [0, 1, 3, 8, ..., 39, 34, 25, 33]
+**************************************************
+number_emergency [0, 1, 2, 4, 5, 3, 8, 6, 25, 7]
+Categories (10, object): [0, 1, 2, 4, ..., 8, 6, 25, 7]
+**************************************************
+number_inpatient [0, 1, 2, 3, 6, ..., 9, 10, 11, 12, 13]
+Length: 14
+Categories (14, object): [0, 1, 2, 3, ..., 10, 11, 12, 13]
+**************************************************
+diag_1 [428, 398, 434, 402, 410, ..., 941, 58, 52, 680, 377]
+Length: 555
+Categories (555, object): [428, 398, 434, 402, ..., 58, 52, 680, 377]
+**************************************************
+diag_2 [492, 427, 198, 411, 425, ..., V60, 741, 907, 452, 837]
+Length: 570
+Categories (570, object): [492, 427, 198, 411, ..., 741, 907, 452, 837]
+**************************************************
+diag_3 [250, 38, 486, 427, 416, ..., 271, 942, 480, 565, 334]
+Length: 608
+Categories (608, object): [250, 38, 486, 427, ..., 942, 480, 565, 334]
+**************************************************
+number_diagnoses [8, 9, 6, 7, 5, ..., 13, 15, 11, 14, 10]
+Length: 14
+Categories (14, object): [8, 9, 6, 7, ..., 15, 11, 14, 10]
+**************************************************
+max_glu_serum [None, >300, Norm, >200]
+Categories (4, object): [None, >300, Norm, >200]
+**************************************************
+A1Cresult [None, >7, Norm, >8]
+Categories (4, object): [None, >7, Norm, >8]
+**************************************************
+metformin [No, Steady, Up, Down]
+Categories (4, object): [No, Steady, Up, Down]
+**************************************************
+repaglinide [No, Steady, Down, Up]
+Categories (4, object): [No, Steady, Down, Up]
+**************************************************
+nateglinide [No, Steady, Down, Up]
+Categories (4, object): [No, Steady, Down, Up]
+**************************************************
+chlorpropamide [No, Steady, Down, Up]
+Categories (4, object): [No, Steady, Down, Up]
+**************************************************
+glimepiride [No, Steady, Down, Up]
+Categories (4, object): [No, Steady, Down, Up]
+**************************************************
+acetohexamide [No, Steady]
+Categories (2, object): [No, Steady]
+**************************************************
+glipizide [No, Steady, Up, Down]
+Categories (4, object): [No, Steady, Up, Down]
+**************************************************
+glyburide [Steady, No, Down, Up]
+Categories (4, object): [Steady, No, Down, Up]
+**************************************************
+tolbutamide [No, Steady]
+Categories (2, object): [No, Steady]
+**************************************************
+pioglitazone [No, Steady, Up, Down]
+Categories (4, object): [No, Steady, Up, Down]
+**************************************************
+rosiglitazone [No, Steady, Up, Down]
+Categories (4, object): [No, Steady, Up, Down]
+**************************************************
+acarbose [No, Steady, Up, Down]
+Categories (4, object): [No, Steady, Up, Down]
+**************************************************
+miglitol [No, Steady, Down, Up]
+Categories (4, object): [No, Steady, Down, Up]
+**************************************************
+troglitazone [No, Steady]
+Categories (2, object): [No, Steady]
+**************************************************
+tolazamide [No, Steady, Up]
+Categories (3, object): [No, Steady, Up]
+**************************************************
+insulin [No, Steady, Down, Up]
+Categories (4, object): [No, Steady, Down, Up]
+**************************************************
+glyburide-metformin [No, Steady, Down, Up]
+Categories (4, object): [No, Steady, Down, Up]
+**************************************************
+glipizide-metformin [No, Steady]
+Categories (2, object): [No, Steady]
+**************************************************
+change [No, Ch]
+Categories (2, object): [No, Ch]
+**************************************************
+diabetesMed [Yes, No]
+Categories (2, object): [Yes, No]
+**************************************************
+readmitted [>30, NO, <30]
+Categories (3, object): [>30, NO, <30]
+**************************************************
+train accuracy: 0.52
+test accuracy: 0.52
+Micro-averaged precision = 0.52 (treat instances equally)
+Macro-averaged precision = 0.17 (treat classes equally)
+Micro-averaged f1 = 0.52 (treat instances equally)
+Macro-averaged f1 = 0.23 (treat classes equally)
+Categorical Dummy Classifier classification
+             precision    recall  f1-score   support
+
+        <30       0.00      0.00      0.00      1372
+        >30       0.00      0.00      0.00      3971
+         NO       0.52      1.00      0.69      5838
+
+avg / total       0.27      0.52      0.36     11181
+
+[LibLinear]training accuracy: 0.54
+test accuracy: 0.54
+Micro-averaged precision = 0.54 (treat instances equally)
+Macro-averaged precision = 0.34 (treat classes equally)
+Micro-averaged f1 = 0.54 (treat instances equally)
+Macro-averaged f1 = 0.31 (treat classes equally)
+Categorical Linear Kernel classification
+             precision    recall  f1-score   support
+
+        <30       0.00      0.00      0.00      1372
+        >30       0.46      0.18      0.26      3971
+         NO       0.55      0.91      0.69      5838
+
+avg / total       0.45      0.54      0.45     11181
+
+........................................................................*............................
+optimization finished, #iter = 1000
+
+WARNING: reaching max number of iterations
+Using -s 2 may be faster (also see FAQ)
+
+Objective value = -12714.647471
+nSV = 30329
+..........................................................................*..........................
+optimization finished, #iter = 1000
+
+WARNING: reaching max number of iterations
+Using -s 2 may be faster (also see FAQ)
+
+Objective value = -27639.086929
+nSV = 32134
+.........................................................................*.*
+optimization finished, #iter = 743
+Objective value = -28774.786169
+nSV = 32323
+Grid best parameter (max. accuracy):  {'C': 100, 'gamma': 0.05, 'kernel': 'rbf'}
+Grid best score (accuracy):  0.542646751930358
+Micro-averaged precision = 0.54 (treat instances equally)
+Macro-averaged precision = 0.35 (treat classes equally)
+Micro-averaged f1 = 0.54 (treat instances equally)
+Macro-averaged f1 = 0.32 (treat classes equally)
+Categorical Grid Search classification
+             precision    recall  f1-score   support
+
+        <30       0.00      0.00      0.00      1372
+        >30       0.49      0.18      0.27      3971
+         NO       0.55      0.92      0.69      5838
+
+avg / total       0.46      0.54      0.45     11181
+
+train accuracy: 0.52
+test accuracy: 0.52
+Micro-averaged precision = 0.52 (treat instances equally)
+Macro-averaged precision = 0.17 (treat classes equally)
+Micro-averaged f1 = 0.52 (treat instances equally)
+Macro-averaged f1 = 0.23 (treat classes equally)
+One Hot Dummy Classifier classification
+             precision    recall  f1-score   support
+
+        <30       0.00      0.00      0.00      1372
+        >30       0.00      0.00      0.00      3971
+         NO       0.52      1.00      0.69      5838
+
+avg / total       0.27      0.52      0.36     11181
+
+[LibLinear]training accuracy: 0.59
+test accuracy: 0.54
+Micro-averaged precision = 0.54 (treat instances equally)
+Macro-averaged precision = 0.43 (treat classes equally)
+Micro-averaged f1 = 0.54 (treat instances equally)
+Macro-averaged f1 = 0.37 (treat classes equally)
+One Hot Linear Kernel classification
+             precision    recall  f1-score   support
+
+        <30       0.24      0.02      0.03      1372
+        >30       0.46      0.39      0.42      3971
+         NO       0.58      0.77      0.66      5838
+
+avg / total       0.50      0.54      0.50     11181
+
